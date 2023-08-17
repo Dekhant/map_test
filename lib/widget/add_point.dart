@@ -87,10 +87,7 @@ class _AddPointState extends State<AddPoint> {
                     ),
                   ],
                 ),
-                leading: BackButton(
-                  color: Colors.white,
-                  onPressed: () {},
-                ),
+                leading: const BackButton(color: Colors.white),
               ),
               const SizedBox(height: 29),
               Padding(
@@ -123,16 +120,20 @@ class _AddPointState extends State<AddPoint> {
                       ),
                     ),
                     const SizedBox(height: 24),
-                    TextFieldWithTitle(
-                      controller: _addressNameController,
-                      text: 'Address Name',
-                      isRequired: true,
-                      haveError: _hasAddressNameError,
-                      onChange: (value) => setState(() {
-                        if (value.isEmpty) {
-                          _hasAddressNameError = true;
-                        }
-                      }),
+                    StatefulBuilder(
+                      builder: (context, setState) {
+                        return TextFieldWithTitle(
+                          controller: _addressNameController,
+                          text: 'Address Name',
+                          isRequired: true,
+                          haveError: _hasAddressNameError,
+                          onChange: (value) => setState(() {
+                            if (value.isEmpty) {
+                              _hasAddressNameError = true;
+                            }
+                          }),
+                        );
+                      },
                     ),
                     const SizedBox(height: 14),
                     DecoratedBox(
@@ -143,30 +144,38 @@ class _AddPointState extends State<AddPoint> {
                         padding: const EdgeInsets.all(14),
                         child: Column(
                           children: [
-                            TextFieldWithTitle(
-                              text: 'First Name',
-                              controller: _firstNameController,
-                              isRequired: true,
-                              haveError: _hasFirstNameError,
-                              errorMessage: 'First Name must be filled',
-                              onChange: (value) => setState(() {
-                                if (value.isEmpty) {
-                                  _hasFirstNameError = true;
-                                }
-                              }),
+                            StatefulBuilder(
+                              builder: (context, setState) {
+                                return TextFieldWithTitle(
+                                  text: 'First Name',
+                                  controller: _firstNameController,
+                                  isRequired: true,
+                                  haveError: _hasFirstNameError,
+                                  errorMessage: 'First Name must be filled',
+                                  onChange: (value) => setState(() {
+                                    if (value.isEmpty) {
+                                      _hasFirstNameError = true;
+                                    }
+                                  }),
+                                );
+                              },
                             ),
                             const SizedBox(height: 14),
-                            TextFieldWithTitle(
-                              text: 'Last Name',
-                              controller: _lastNameController,
-                              isRequired: true,
-                              haveError: _hasLastNameError,
-                              errorMessage: 'Last Name must be filled',
-                              onChange: (value) => setState(() {
-                                if (value.isEmpty) {
-                                  _hasLastNameError = true;
-                                }
-                              }),
+                            StatefulBuilder(
+                              builder: (context, setState) {
+                                return TextFieldWithTitle(
+                                  text: 'Last Name',
+                                  controller: _lastNameController,
+                                  isRequired: true,
+                                  haveError: _hasLastNameError,
+                                  errorMessage: 'Last Name must be filled',
+                                  onChange: (value) => setState(() {
+                                    if (value.isEmpty) {
+                                      _hasLastNameError = true;
+                                    }
+                                  }),
+                                );
+                              },
                             ),
                             const SizedBox(height: 14),
                             const Row(
@@ -198,34 +207,42 @@ class _AddPointState extends State<AddPoint> {
                               ],
                             ),
                             const SizedBox(height: 7),
-                            TextFieldWithTitle(
-                              text: 'Company Name',
-                              controller: _companyNameController,
-                              isRequired: true,
-                              haveError: _hasCompanyNameError,
-                              errorMessage: 'Company name must be filled',
-                              onChange: (value) => setState(() {
-                                if (value.isEmpty) {
-                                  _hasCompanyNameError = true;
-                                }
-                              }),
+                            StatefulBuilder(
+                              builder: (context, setState) {
+                                return TextFieldWithTitle(
+                                  text: 'Company Name',
+                                  controller: _companyNameController,
+                                  isRequired: true,
+                                  haveError: _hasCompanyNameError,
+                                  errorMessage: 'Company name must be filled',
+                                  onChange: (value) => setState(() {
+                                    if (value.isEmpty) {
+                                      _hasCompanyNameError = true;
+                                    }
+                                  }),
+                                );
+                              },
                             ),
                           ],
                         ),
                       ),
                     ),
                     const SizedBox(height: 14),
-                    TextFieldWithTitle(
-                      text: 'Address 1',
-                      controller: _firstAddressController,
-                      isRequired: true,
-                      haveError: _hasFirstAddressError,
-                      errorMessage: 'Wrong Address',
-                      onChange: (value) => setState(() {
-                        if (value.isEmpty) {
-                          _hasFirstAddressError = true;
-                        }
-                      }),
+                    StatefulBuilder(
+                      builder: (context, setState) {
+                        return TextFieldWithTitle(
+                          text: 'Address 1',
+                          controller: _firstAddressController,
+                          isRequired: true,
+                          haveError: _hasFirstAddressError,
+                          errorMessage: 'Wrong Address',
+                          onChange: (value) => setState(() {
+                            if (value.isEmpty) {
+                              _hasFirstAddressError = true;
+                            }
+                          }),
+                        );
+                      },
                     ),
                     const SizedBox(height: 14),
                     TextFieldWithTitle(
@@ -233,97 +250,113 @@ class _AddPointState extends State<AddPoint> {
                       controller: _secondAddressController,
                     ),
                     const SizedBox(height: 14),
-                    TextFieldWithTitle(
-                      text: 'Country',
-                      controller: _countryController,
-                      isRequired: true,
-                      haveError: _hasCountryError,
-                      errorMessage: 'Wrong Country',
-                      onChange: (value) => setState(() {
-                        if (value.isEmpty) {
-                          _hasCountryError = true;
-                        }
-                      }),
+                    StatefulBuilder(
+                      builder: (context, setState) {
+                        return TextFieldWithTitle(
+                          text: 'Country',
+                          controller: _countryController,
+                          isRequired: true,
+                          haveError: _hasCountryError,
+                          errorMessage: 'Wrong Country',
+                          onChange: (value) => setState(() {
+                            if (value.isEmpty) {
+                              _hasCountryError = true;
+                            }
+                          }),
+                        );
+                      },
                     ),
                     const SizedBox(height: 14),
-                    Row(
-                      children: [
-                        Expanded(
-                          flex: 128,
-                          child: TextFieldWithTitle(
-                            text: 'City',
-                            controller: _cityController,
-                            isRequired: true,
-                            haveError: _hasCityError,
-                            errorMessage: 'Wrong City',
-                            onChange: (value) => setState(() {
-                              if (value.isEmpty) {
-                                _hasCityError = true;
-                              }
-                            }),
-                          ),
-                        ),
-                        const SizedBox(width: 8),
-                        Expanded(
-                          flex: 80,
-                          child: TextFieldWithTitle(
-                            text: 'State',
-                            controller: _stateController,
-                            isRequired: true,
-                            haveError: _hasStateError,
-                            errorMessage: 'Wrong State',
-                            onChange: (value) => setState(() {
-                              if (value.isEmpty) {
-                                _hasStateError = true;
-                              }
-                            }),
-                          ),
-                        ),
-                        const SizedBox(width: 8),
-                        Expanded(
-                          flex: 80,
-                          child: TextFieldWithTitle(
-                            text: 'Zip',
-                            controller: _zipController,
-                            isRequired: true,
-                            haveError: _hasZipError,
-                            keyboardType: TextInputType.number,
-                            errorMessage: 'Wrong Zip',
-                            onChange: (value) => setState(() {
-                              if (value.isEmpty) {
-                                _hasZipError = true;
-                              }
-                            }),
-                          ),
-                        ),
-                      ],
+                    StatefulBuilder(
+                      builder: (context, setState) {
+                        return Row(
+                          children: [
+                            Expanded(
+                              flex: 128,
+                              child: TextFieldWithTitle(
+                                text: 'City',
+                                controller: _cityController,
+                                isRequired: true,
+                                haveError: _hasCityError,
+                                errorMessage: 'Wrong City',
+                                onChange: (value) => setState(() {
+                                  if (value.isEmpty) {
+                                    _hasCityError = true;
+                                  }
+                                }),
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            Expanded(
+                              flex: 80,
+                              child: TextFieldWithTitle(
+                                text: 'State',
+                                controller: _stateController,
+                                isRequired: true,
+                                haveError: _hasStateError,
+                                errorMessage: 'Wrong State',
+                                onChange: (value) => setState(() {
+                                  if (value.isEmpty) {
+                                    _hasStateError = true;
+                                  }
+                                }),
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            Expanded(
+                              flex: 80,
+                              child: TextFieldWithTitle(
+                                text: 'Zip',
+                                controller: _zipController,
+                                isRequired: true,
+                                haveError: _hasZipError,
+                                keyboardType: TextInputType.number,
+                                errorMessage: 'Wrong Zip',
+                                onChange: (value) => setState(() {
+                                  if (value.isEmpty) {
+                                    _hasZipError = true;
+                                  }
+                                }),
+                              ),
+                            ),
+                          ],
+                        );
+                      },
                     ),
                     const SizedBox(height: 14),
-                    TextFieldWithTitle(
-                      text: 'Phone',
-                      controller: _phoneController,
-                      isRequired: true,
-                      keyboardType: TextInputType.number,
-                      inputFormatters: [formatter],
-                      haveError: _hasPhoneError,
-                      onChange: (value) => setState(() {
-                        if (value.isEmpty) {
-                          _hasPhoneError = true;
-                        }
-                      }),
-                      errorMessage: 'Phone must be filled',
+                    StatefulBuilder(
+                      builder: (context, setState) {
+                        return TextFieldWithTitle(
+                          text: 'Phone',
+                          controller: _phoneController,
+                          isRequired: true,
+                          keyboardType: TextInputType.number,
+                          inputFormatters: [formatter],
+                          haveError: _hasPhoneError,
+                          onChange: (value) => setState(() {
+                            if (value.isEmpty) {
+                              _hasPhoneError = true;
+                            }
+                          }),
+                          errorMessage: 'Phone must be filled',
+                        );
+                      },
                     ),
                     const SizedBox(height: 14),
-                    TextFieldWithTitle(
-                      text: 'Email',
-                      controller: _emailController,
-                      isRequired: true,
-                      keyboardType: TextInputType.emailAddress,
-                      onChange: (value) => setState(
-                        () => _hasEmailError = !EmailValidator.validate(value),
-                      ),
-                      errorMessage: 'Wrong email',
-                      haveError: _hasEmailError,
+                    StatefulBuilder(
+                      builder: (context, setState) {
+                        return TextFieldWithTitle(
+                          text: 'Email',
+                          controller: _emailController,
+                          isRequired: true,
+                          keyboardType: TextInputType.emailAddress,
+                          onChange: (value) => setState(
+                            () => _hasEmailError = !EmailValidator.validate(value),
+                          ),
+                          errorMessage: 'Wrong email',
+                          haveError: _hasEmailError,
+                        );
+                      },
                     ),
                     const SizedBox(height: 48),
                     CustomTextButton(
