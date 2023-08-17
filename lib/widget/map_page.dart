@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
@@ -27,18 +28,13 @@ class MarkerIconsBody extends StatefulWidget {
 
 class MarkerIconsBodyState extends State<MarkerIconsBody> {
   GoogleMapController? _mapController;
-  BitmapDescriptor? _markerIcon;
   final PageController _pageController = PageController(viewportFraction: 0.9);
-  final Set<Marker> _points = {
-    const Marker(position: LatLng(52.4478, -3.5402), markerId: MarkerId('1')),
-    const Marker(position: LatLng(42.4478, -13.5402), markerId: MarkerId('2')),
-    const Marker(position: LatLng(32.4478, 8.5402), markerId: MarkerId('3')),
-  };
+  final Set<Marker> _markers = {};
+  static const List<LatLng> _points = [LatLng(52.4478, -3.5402), LatLng(42.4478, -13.5402), LatLng(32.4478, 8.5402)];
 
   @override
   void initState() {
     super.initState();
-    unawaited(_createMarkerImageFromAsset(context));
   }
 
   @override
@@ -86,10 +82,10 @@ class MarkerIconsBodyState extends State<MarkerIconsBody> {
             GoogleMap(
               zoomControlsEnabled: false,
               initialCameraPosition: CameraPosition(
-                target: _points.elementAt(0).position,
+                target: _points.first,
                 zoom: 7,
               ),
-              markers: _points,
+              markers: _markers,
               onMapCreated: _onMapCreated,
             ),
             Align(
@@ -102,13 +98,13 @@ class MarkerIconsBodyState extends State<MarkerIconsBody> {
                     await _mapController?.animateCamera(
                       CameraUpdate.newCameraPosition(
                         CameraPosition(
-                          target: _points.elementAt(value).position,
+                          target: _markers.elementAt(value).position,
                           zoom: 7,
                         ),
                       ),
                     );
                   },
-                  itemCount: _points.length,
+                  itemCount: _markers.length,
                   itemBuilder: (context, index) => const Padding(
                     padding: EdgeInsets.symmetric(horizontal: 8),
                     child: PointInfoCard(
@@ -131,44 +127,91 @@ class MarkerIconsBodyState extends State<MarkerIconsBody> {
   Future<Uint8List?> getBytesFromCanvas(int customNum, int width, int height) async {
     final pictureRecorder = ui.PictureRecorder();
     final canvas = Canvas(pictureRecorder);
-    final paint = Paint()..color = Colors.blue;
-    final radius = Radius.circular(width / 2);
-    canvas.drawRRect(
-      RRect.fromRectAndCorners(
-        Rect.fromLTWH(0, 0, width.toDouble(), height.toDouble()),
-        topLeft: radius,
-        topRight: radius,
-        bottomLeft: radius,
-        bottomRight: radius,
-      ),
-      paint,
-    );
-
+    final path_0 = Path()
+      ..moveTo(width * 0.8409091, height * 0.3466568)
+      ..cubicTo(
+        width * 0.8409091,
+        height * 0.5255568,
+        width * 0.5943182,
+        height * 0.9621205,
+        width * 0.4886364,
+        height * 0.9621205,
+      )
+      ..cubicTo(
+        width * 0.3829545,
+        height * 0.9621205,
+        width * 0.1363636,
+        height * 0.5255568,
+        width * 0.1363636,
+        height * 0.3466568,
+      )
+      ..cubicTo(
+        width * 0.1363636,
+        height * 0.1677552,
+        width * 0.2940818,
+        height * 0.02272727,
+        width * 0.4886364,
+        height * 0.02272727,
+      )
+      ..cubicTo(
+        width * 0.6831909,
+        height * 0.02272727,
+        width * 0.8409091,
+        height * 0.1677552,
+        width * 0.8409091,
+        height * 0.3466568,
+      )
+      ..close();
+    final paint0Fill = Paint()
+      ..style = PaintingStyle.fill
+      ..color = AppColors.primaryRed;
+    canvas.drawPath(path_0, paint0Fill);
+    final paint1Fill = Paint()
+      ..style = PaintingStyle.fill
+      ..color = Colors.white;
+    canvas.drawCircle(Offset(width * 0.4886364, height * 0.3863636), width * 0.2500000, paint1Fill);
     final painter = TextPainter(textDirection: TextDirection.ltr);
     painter
       ..text = TextSpan(
-        text: customNum.toString(), // your custom number here
-        style: const TextStyle(fontSize: 65, color: Colors.white),
+        text: customNum.toString(),
+        style: const TextStyle(
+          color: Color(0xFF020202),
+          fontSize: 40,
+          fontWeight: FontWeight.w700,
+          letterSpacing: -0.32,
+        ),
       )
       ..layout()
-      ..paint(canvas, Offset((width * 0.5) - painter.width * 0.5, (height * .5) - painter.height * 0.5));
-    final img = await pictureRecorder.endRecording().toImage(width, height);
+      ..paint(canvas, Offset((width * .62) - painter.width, (height * .37) - painter.height * .5));
+
+    final img = await pictureRecorder.endRecording().toImage(width + 20, height + 20);
     final data = await img.toByteData(format: ui.ImageByteFormat.png);
     return data?.buffer.asUint8List();
   }
 
-  Future<void> _createMarkerImageFromAsset(BuildContext context) async {
-    if (_markerIcon == null) {
-      final markerIcon = await getBytesFromCanvas(1, 150, 150);
-      if (markerIcon != null) {
-        setState(() {
-          _markerIcon = BitmapDescriptor.fromBytes(markerIcon);
-        });
-      }
-    }
+  Future<ui.Image> getImageFromPath(String imagePath) async {
+    final imageFile = File(imagePath);
+
+    final imageBytes = imageFile.readAsBytesSync();
+
+    final completer = Completer<ui.Image>();
+
+    ui.decodeImageFromList(imageBytes, completer.complete);
+
+    return completer.future;
   }
 
   Future<void> _onMapCreated(GoogleMapController controllerParam) async {
+    for (var i = 0; i < _points.length; i++) {
+      final markerIcon = await getBytesFromCanvas(i + 1, 88, 88);
+      _markers.add(
+        Marker(
+          markerId: MarkerId('Marker_$i'),
+          position: _points[i],
+          icon: markerIcon != null ? BitmapDescriptor.fromBytes(markerIcon) : BitmapDescriptor.defaultMarker,
+        ),
+      );
+    }
     final style = await rootBundle.loadString('assets/map_style.json');
     await controllerParam.setMapStyle(style);
     setState(() {
