@@ -1,6 +1,8 @@
 import 'dart:async';
+import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:map_task/gen/assets.gen.dart';
@@ -29,9 +31,15 @@ class MarkerIconsBodyState extends State<MarkerIconsBody> {
   final PageController _pageController = PageController(viewportFraction: 0.9);
   final Set<Marker> _points = {
     const Marker(position: LatLng(52.4478, -3.5402), markerId: MarkerId('1')),
-    const Marker(position: LatLng(42.4478, -13.5402), markerId: MarkerId('1')),
-    const Marker(position: LatLng(32.4478, 8.5402), markerId: MarkerId('1')),
+    const Marker(position: LatLng(42.4478, -13.5402), markerId: MarkerId('2')),
+    const Marker(position: LatLng(32.4478, 8.5402), markerId: MarkerId('3')),
   };
+
+  @override
+  void initState() {
+    super.initState();
+    unawaited(_createMarkerImageFromAsset(context));
+  }
 
   @override
   void dispose() {
@@ -41,7 +49,6 @@ class MarkerIconsBodyState extends State<MarkerIconsBody> {
 
   @override
   Widget build(BuildContext context) {
-    unawaited(_createMarkerImageFromAsset(context));
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -121,20 +128,49 @@ class MarkerIconsBodyState extends State<MarkerIconsBody> {
     );
   }
 
+  Future<Uint8List?> getBytesFromCanvas(int customNum, int width, int height) async {
+    final pictureRecorder = ui.PictureRecorder();
+    final canvas = Canvas(pictureRecorder);
+    final paint = Paint()..color = Colors.blue;
+    final radius = Radius.circular(width / 2);
+    canvas.drawRRect(
+      RRect.fromRectAndCorners(
+        Rect.fromLTWH(0, 0, width.toDouble(), height.toDouble()),
+        topLeft: radius,
+        topRight: radius,
+        bottomLeft: radius,
+        bottomRight: radius,
+      ),
+      paint,
+    );
+
+    final painter = TextPainter(textDirection: TextDirection.ltr);
+    painter
+      ..text = TextSpan(
+        text: customNum.toString(), // your custom number here
+        style: const TextStyle(fontSize: 65, color: Colors.white),
+      )
+      ..layout()
+      ..paint(canvas, Offset((width * 0.5) - painter.width * 0.5, (height * .5) - painter.height * 0.5));
+    final img = await pictureRecorder.endRecording().toImage(width, height);
+    final data = await img.toByteData(format: ui.ImageByteFormat.png);
+    return data?.buffer.asUint8List();
+  }
+
   Future<void> _createMarkerImageFromAsset(BuildContext context) async {
     if (_markerIcon == null) {
-      final imageConfiguration = createLocalImageConfiguration(context, size: const Size.square(48));
-      await BitmapDescriptor.fromAssetImage(imageConfiguration, Assets.svg.faq).then(_updateBitmap);
+      final markerIcon = await getBytesFromCanvas(1, 150, 150);
+      if (markerIcon != null) {
+        setState(() {
+          _markerIcon = BitmapDescriptor.fromBytes(markerIcon);
+        });
+      }
     }
   }
 
-  void _updateBitmap(BitmapDescriptor bitmap) {
-    setState(() {
-      _markerIcon = bitmap;
-    });
-  }
-
-  void _onMapCreated(GoogleMapController controllerParam) {
+  Future<void> _onMapCreated(GoogleMapController controllerParam) async {
+    final style = await rootBundle.loadString('assets/map_style.json');
+    await controllerParam.setMapStyle(style);
     setState(() {
       _mapController = controllerParam;
     });

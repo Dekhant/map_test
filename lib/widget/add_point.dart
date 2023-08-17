@@ -126,6 +126,7 @@ class _AddPointState extends State<AddPoint> {
                           controller: _addressNameController,
                           text: 'Address Name',
                           isRequired: true,
+                          errorMessage: 'Address must be filled',
                           haveError: _hasAddressNameError,
                           onChange: (value) => setState(() {
                             if (value.isEmpty) {
@@ -361,7 +362,7 @@ class _AddPointState extends State<AddPoint> {
                     const SizedBox(height: 48),
                     CustomTextButton(
                       text: 'Create Address',
-                      onPressed: () {},
+                      onPressed: _checkData,
                     ),
                     const SizedBox(height: 29),
                   ],
@@ -372,5 +373,26 @@ class _AddPointState extends State<AddPoint> {
         ),
       ),
     );
+  }
+
+  void _checkData() {
+    if (_addressNameController.text.isEmpty) {
+      setState(() => _hasAddressNameError = true);
+    }
+    if (_firstAddressController.text.isEmpty) {
+      setState(() => _hasFirstAddressError = true);
+    }
+    if (_countryController.text.isEmpty) {
+      setState(() => _hasCountryError = true);
+    }
+    if (_cityController.text.isEmpty) {
+      setState(() => _hasCityError = true);
+    }
+    if (_stateController.text.isEmpty) {
+      setState(() => _hasStateError = true);
+    }
+    if (_cityController.text.isEmpty) {
+      setState(() => _hasCityError = true);
+    }
   }
 }
