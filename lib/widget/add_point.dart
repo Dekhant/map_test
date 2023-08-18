@@ -131,6 +131,8 @@ class _AddPointState extends State<AddPoint> {
                           onChange: (value) => setState(() {
                             if (value.isEmpty) {
                               _hasAddressNameError = true;
+                            } else {
+                              _hasAddressNameError = false;
                             }
                           }),
                         );
@@ -156,6 +158,8 @@ class _AddPointState extends State<AddPoint> {
                                   onChange: (value) => setState(() {
                                     if (value.isEmpty) {
                                       _hasFirstNameError = true;
+                                    } else {
+                                      _hasFirstNameError = false;
                                     }
                                   }),
                                 );
@@ -173,6 +177,8 @@ class _AddPointState extends State<AddPoint> {
                                   onChange: (value) => setState(() {
                                     if (value.isEmpty) {
                                       _hasLastNameError = true;
+                                    } else {
+                                      _hasLastNameError = false;
                                     }
                                   }),
                                 );
@@ -219,6 +225,8 @@ class _AddPointState extends State<AddPoint> {
                                   onChange: (value) => setState(() {
                                     if (value.isEmpty) {
                                       _hasCompanyNameError = true;
+                                    } else {
+                                      _hasCompanyNameError = false;
                                     }
                                   }),
                                 );
@@ -240,6 +248,8 @@ class _AddPointState extends State<AddPoint> {
                           onChange: (value) => setState(() {
                             if (value.isEmpty) {
                               _hasFirstAddressError = true;
+                            } else {
+                              _hasFirstAddressError = false;
                             }
                           }),
                         );
@@ -262,6 +272,8 @@ class _AddPointState extends State<AddPoint> {
                           onChange: (value) => setState(() {
                             if (value.isEmpty) {
                               _hasCountryError = true;
+                            } else {
+                              _hasCountryError = false;
                             }
                           }),
                         );
@@ -283,6 +295,8 @@ class _AddPointState extends State<AddPoint> {
                                 onChange: (value) => setState(() {
                                   if (value.isEmpty) {
                                     _hasCityError = true;
+                                  } else {
+                                    _hasCityError = false;
                                   }
                                 }),
                               ),
@@ -299,6 +313,8 @@ class _AddPointState extends State<AddPoint> {
                                 onChange: (value) => setState(() {
                                   if (value.isEmpty) {
                                     _hasStateError = true;
+                                  } else {
+                                    _hasStateError = false;
                                   }
                                 }),
                               ),
@@ -316,6 +332,8 @@ class _AddPointState extends State<AddPoint> {
                                 onChange: (value) => setState(() {
                                   if (value.isEmpty) {
                                     _hasZipError = true;
+                                  } else {
+                                    _hasZipError = false;
                                   }
                                 }),
                               ),
@@ -337,6 +355,8 @@ class _AddPointState extends State<AddPoint> {
                           onChange: (value) => setState(() {
                             if (value.isEmpty) {
                               _hasPhoneError = true;
+                            } else {
+                              _hasPhoneError = false;
                             }
                           }),
                           errorMessage: 'Phone must be filled',
@@ -377,22 +397,52 @@ class _AddPointState extends State<AddPoint> {
 
   void _checkData() {
     if (_addressNameController.text.isEmpty) {
-      setState(() => _hasAddressNameError = true);
+      _hasAddressNameError = true;
     }
     if (_firstAddressController.text.isEmpty) {
-      setState(() => _hasFirstAddressError = true);
+      _hasFirstAddressError = true;
+    }
+    if (!((_firstNameController.text.isNotEmpty && _lastNameController.text.isNotEmpty) ||
+        _companyNameController.text.isNotEmpty)) {
+      if (_firstNameController.text.isEmpty) {
+        _hasFirstNameError = true;
+      } else {
+        _hasFirstNameError = false;
+      }
+      if (_lastNameController.text.isEmpty) {
+        _hasLastNameError = true;
+      } else {
+        _hasLastNameError = false;
+      }
+      if (_companyNameController.text.isEmpty) {
+        _hasCompanyNameError = true;
+      }
+    } else {
+      _hasFirstNameError = false;
+      _hasLastNameError = false;
+      _hasCompanyNameError = false;
     }
     if (_countryController.text.isEmpty) {
-      setState(() => _hasCountryError = true);
+      _hasCountryError = true;
     }
     if (_cityController.text.isEmpty) {
-      setState(() => _hasCityError = true);
+      _hasCityError = true;
     }
     if (_stateController.text.isEmpty) {
-      setState(() => _hasStateError = true);
+      _hasStateError = true;
     }
-    if (_cityController.text.isEmpty) {
-      setState(() => _hasCityError = true);
+    if (_stateController.text.isEmpty) {
+      _hasStateError = true;
     }
+    if (_zipController.text.isEmpty) {
+      _hasZipError = true;
+    }
+    if (_emailController.text.isEmpty) {
+      _hasEmailError = true;
+    }
+    if (_phoneController.text.isEmpty || !_phoneController.text.startsWith('+')) {
+      _hasPhoneError = true;
+    }
+    setState(() {});
   }
 }

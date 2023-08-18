@@ -127,7 +127,7 @@ class MarkerIconsBodyState extends State<MarkerIconsBody> {
   Future<Uint8List?> getBytesFromCanvas(int customNum, int width, int height) async {
     final pictureRecorder = ui.PictureRecorder();
     final canvas = Canvas(pictureRecorder);
-    final path_0 = Path()
+    final markerPath = Path()
       ..moveTo(width * 0.8409091, height * 0.3466568)
       ..cubicTo(
         width * 0.8409091,
@@ -165,7 +165,7 @@ class MarkerIconsBodyState extends State<MarkerIconsBody> {
     final paint0Fill = Paint()
       ..style = PaintingStyle.fill
       ..color = AppColors.primaryRed;
-    canvas.drawPath(path_0, paint0Fill);
+    canvas.drawPath(markerPath, paint0Fill);
     final paint1Fill = Paint()
       ..style = PaintingStyle.fill
       ..color = Colors.white;
